@@ -12,8 +12,6 @@
 //-------------------------------------------------------------------------------------------------------------//
 // CONSTRUCTOR: DeviceSearcher
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 DeviceSearcher::DeviceSearcher(QWidget *parent)
 :   QDialog(parent), localDevice(new QBluetoothLocalDevice),
@@ -44,8 +42,6 @@ DeviceSearcher::DeviceSearcher(QWidget *parent)
 //-------------------------------------------------------------------------------------------------------------//
 // DESTRUCTOR: ~DeviceSearcher
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 DeviceSearcher::~DeviceSearcher()
 {
@@ -56,16 +52,23 @@ DeviceSearcher::~DeviceSearcher()
 //-------------------------------------------------------------------------------------------------------------//
 // METHOD: addDevice
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 void DeviceSearcher::addDevice(const QBluetoothDeviceInfo &info)
 {
+    // add bluetooth device to list
     QString label = QString("%1 %2").arg(info.address().toString()).arg(info.name());
     QList<QListWidgetItem *> items = ui->list->findItems(label, Qt::MatchExactly);
+
+
     if (items.empty()) {
+
         QListWidgetItem *item = new QListWidgetItem(label);
+
+        // check if we are paired to the device
         QBluetoothLocalDevice::Pairing pairingStatus = localDevice->pairingStatus(info.address());
+
+
+        // notify user we are paired by highlighting the foreground as green
         if (pairingStatus == QBluetoothLocalDevice::Paired || pairingStatus == QBluetoothLocalDevice::AuthorizedPaired )
             item->setForeground(QColor(Qt::green));
         else
@@ -80,8 +83,6 @@ void DeviceSearcher::addDevice(const QBluetoothDeviceInfo &info)
 //-------------------------------------------------------------------------------------------------------------//
 // METHOD: startScan
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 void DeviceSearcher::startScan()
 {
@@ -93,8 +94,6 @@ void DeviceSearcher::startScan()
 //-------------------------------------------------------------------------------------------------------------//
 // METHOD: scanFinished
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 void DeviceSearcher::scanFinished()
 {
@@ -104,8 +103,6 @@ void DeviceSearcher::scanFinished()
 
 //-------------------------------------------------------------------------------------------------------------//
 // METHOD: itemActivated
-//
-//
 //
 //-------------------------------------------------------------------------------------------------------------//
 void DeviceSearcher::itemActivated(QListWidgetItem *item)
@@ -145,13 +142,13 @@ void DeviceSearcher::startNewConnection(const QBluetoothServiceInfo& info)
 //-------------------------------------------------------------------------------------------------------------//
 // METHOD: displayPairingMenu
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 void DeviceSearcher::displayPairingMenu(const QPoint &pos)
 {
     if (ui->list->count() == 0)
         return;
+
+    // create context menu to allow adding/removing pairing
     QMenu menu(this);
     QAction *pairAction = menu.addAction("Pair");
     QAction *removePairAction = menu.addAction("Remove Pairing");
@@ -163,6 +160,7 @@ void DeviceSearcher::displayPairingMenu(const QPoint &pos)
     if (index == -1)
         return;
 
+    // determine if the user wants use to pair or remove pairing
     QBluetoothAddress address (text.left(index));
     if (chosenAction == pairAction) {
         localDevice->requestPairing(address, QBluetoothLocalDevice::Paired);
@@ -175,13 +173,12 @@ void DeviceSearcher::displayPairingMenu(const QPoint &pos)
 //-------------------------------------------------------------------------------------------------------------//
 // METHOD: pairingDone
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 void DeviceSearcher::pairingDone(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing)
 {
     QList<QListWidgetItem *> items = ui->list->findItems(address.toString(), Qt::MatchContains);
 
+    // notify user whether or not we've successfully paired 
     if (pairing == QBluetoothLocalDevice::Paired || pairing == QBluetoothLocalDevice::AuthorizedPaired ) {
         for (int var = 0; var < items.count(); ++var) {
             QListWidgetItem *item = items.at(var);

@@ -12,6 +12,11 @@ QT_FORWARD_DECLARE_CLASS(QBluetoothServiceDiscoveryAgent)
 
 QT_USE_NAMESPACE
 
+
+//-------------------------------------------------------------------------------------------------------------//
+// CLASS: ChipFinder
+//
+//-------------------------------------------------------------------------------------------------------------//
 class ChipFinder : public QDialog
 {
     Q_OBJECT

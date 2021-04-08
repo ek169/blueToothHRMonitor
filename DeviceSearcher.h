@@ -12,6 +12,11 @@ QT_FORWARD_DECLARE_CLASS(QBluetoothDeviceInfo)
 
 QT_USE_NAMESPACE
 
+
+//-------------------------------------------------------------------------------------------------------------//
+// CLASS: DeviceSearcher
+//
+//-------------------------------------------------------------------------------------------------------------//
 class DeviceSearcher : public QDialog
 {
     Q_OBJECT

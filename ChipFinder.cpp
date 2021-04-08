@@ -13,8 +13,6 @@
 //-------------------------------------------------------------------------------------------------------------//
 // CONSTRUCTOR: ChipFinder
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 ChipFinder::ChipFinder(const QString &name,
                                                const QBluetoothAddress &address, QWidget *parent)
@@ -22,11 +20,12 @@ ChipFinder::ChipFinder(const QString &name,
 {
     ui->setupUi(this);
 
-    //Using default Bluetooth adapter
+    // Using default Bluetooth adapter
     QBluetoothLocalDevice localDevice;
     QBluetoothAddress adapterAddress = localDevice.address();
 
 
+    // Start discovery
     std::cout << "device name: " << name.toStdString() << std::endl;
     chipDiscoverer = new QBluetoothServiceDiscoveryAgent(adapterAddress);
 
@@ -45,8 +44,6 @@ ChipFinder::ChipFinder(const QString &name,
 //-------------------------------------------------------------------------------------------------------------//
 // DESTRUCTOR: ~ChipFinder
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 ChipFinder::~ChipFinder()
 {
@@ -58,8 +55,6 @@ ChipFinder::~ChipFinder()
 //-------------------------------------------------------------------------------------------------------------//
 // METHOD: addChip
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 void ChipFinder::addChip(const QBluetoothServiceInfo &info)
 {
@@ -67,14 +62,13 @@ void ChipFinder::addChip(const QBluetoothServiceInfo &info)
     if (info.serviceName().isEmpty())
         return;
 
+    // add discovered bluetooth device to list
     QString line = info.serviceName();
     if (!info.serviceDescription().isEmpty())
         line.append("\n\t" + info.serviceDescription());
     if (!info.serviceProvider().isEmpty())
         line.append("\n\t" + info.serviceProvider());
 
-    //connect(connectToService, &QAction::triggered, [this,info]{emit tryToConnect(info);});
-    std::cout << "should be adding item: " << line.toStdString() << std::endl;
     ui->list->addItem(line);
 }
 
@@ -82,8 +76,6 @@ void ChipFinder::addChip(const QBluetoothServiceInfo &info)
 
 //-------------------------------------------------------------------------------------------------------------//
 // METHOD: tryToConnect
-//
-//
 //
 //-------------------------------------------------------------------------------------------------------------//
 void ChipFinder::tryToConnect(QListWidgetItem* item)
@@ -93,6 +85,7 @@ void ChipFinder::tryToConnect(QListWidgetItem* item)
     QList<QBluetoothServiceInfo> services = chipDiscoverer->discoveredServices();
     QList<QBluetoothServiceInfo>::iterator it;
 
+    // find bluetooth device we want to connect to
     for(it = services.begin(); it < services.end(); it++)
     {
         currentService = *it;
@@ -103,6 +96,7 @@ void ChipFinder::tryToConnect(QListWidgetItem* item)
         }
     }
 
+    // start up a client which will feed the graph with data
     if(!desiredService.serviceName().isEmpty())
     {
         Client * newClient = new Client();

@@ -1,6 +1,11 @@
 #include "peakdetection.h"
 
 
+
+//-------------------------------------------------------------------------------------------------------------//
+// METHOD: diff
+//
+//-------------------------------------------------------------------------------------------------------------//
 void diff(vector<float> in, vector<float>& out)
 {
     out = vector<float>(in.size()-1);
@@ -9,6 +14,11 @@ void diff(vector<float> in, vector<float>& out)
         out[i-1] = in[i] - in[i-1];
 }
 
+
+//-------------------------------------------------------------------------------------------------------------//
+// METHOD: vectorProduct
+//
+//-------------------------------------------------------------------------------------------------------------//
 void vectorProduct(vector<float> a, vector<float> b, vector<float>& out)
 {
     out = vector<float>(a.size());
@@ -17,6 +27,11 @@ void vectorProduct(vector<float> a, vector<float> b, vector<float>& out)
         out[i] = a[i] * b[i];
 }
 
+
+//-------------------------------------------------------------------------------------------------------------//
+// METHOD: findIndicesLessThan
+//
+//-------------------------------------------------------------------------------------------------------------//
 void findIndicesLessThan(vector<float> in, float threshold, vector<int>& indices)
 {
     for(int i=0; i<in.size(); ++i)
@@ -24,18 +39,22 @@ void findIndicesLessThan(vector<float> in, float threshold, vector<int>& indices
             indices.push_back(i+1);
 }
 
+
+//-------------------------------------------------------------------------------------------------------------//
+// METHOD: selectElements {OVERLOAD}
+//
+//-------------------------------------------------------------------------------------------------------------//
 void selectElements(vector<float> in, vector<int> indices, vector<float>& out)
 {
     for(int i=0; i<indices.size(); ++i)
         out.push_back(in[indices[i]]);
 }
 
-void selectElements(vector<int> in, vector<int> indices, vector<int>& out)
-{
-    for(int i=0; i<indices.size(); ++i)
-        out.push_back(in[indices[i]]);
-}
 
+//-------------------------------------------------------------------------------------------------------------//
+// METHOD: signVector
+//
+//-------------------------------------------------------------------------------------------------------------//
 void signVector(vector<float> in, vector<int>& out)
 {
     out = vector<int>(in.size());
@@ -52,6 +71,11 @@ void signVector(vector<float> in, vector<int>& out)
 }
 
 
+
+//-------------------------------------------------------------------------------------------------------------//
+// METHOD: findPeaks
+//
+//-------------------------------------------------------------------------------------------------------------//
 void findPeaks(vector<float> x0, vector<int>& peakInds)
 {
     int minIdx = distance(x0.begin(), min_element(x0.begin(), x0.end()));

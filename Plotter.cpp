@@ -12,8 +12,6 @@ QT_CHARTS_USE_NAMESPACE
 //-------------------------------------------------------------------------------------------------------------//
 // CONSTRUCTOR: Plotter
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 Plotter::Plotter(const QString clientName, QDialog * parent) :
     QDialog(parent),
@@ -29,6 +27,7 @@ Plotter::Plotter(const QString clientName, QDialog * parent) :
     mean_filt_size(30),
     m_largest_prev(0)
 {
+    // set up chart
     QtCharts::QChartView *chartView = new QChartView(m_chart);
     chartView->setMinimumSize(800, 600);
     m_chart->addSeries(m_raw_series);
@@ -80,12 +79,11 @@ Plotter::Plotter(const QString clientName, QDialog * parent) :
 //-------------------------------------------------------------------------------------------------------------//
 // SLOT: addToPlot
 //
-//
-//
 //-------------------------------------------------------------------------------------------------------------//
 void Plotter::addToPlot(const QString &, float val)
 {
     float filt_val, front;
+
     // add value to average filter buffer
     m_avgq.append(val);
     q_total += val;
@@ -101,6 +99,7 @@ void Plotter::addToPlot(const QString &, float val)
 
         mean_filtq.append(val);
         mean_filt_total += val;
+
         if(mean_filtq.size() == mean_filt_size)
         {
             filt_val = mean_filt_total/mean_filt_size;
@@ -113,7 +112,6 @@ void Plotter::addToPlot(const QString &, float val)
         }
 
     }
-
 
     if(val > maxY)
         maxY = val + 20;
@@ -144,8 +142,6 @@ void Plotter::addToPlot(const QString &, float val)
 
 //-------------------------------------------------------------------------------------------------------------//
 // SLOT: updateHeartRate
-//
-//
 //
 //-------------------------------------------------------------------------------------------------------------//
 void Plotter::updateHeartRate()
